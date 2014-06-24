@@ -76,7 +76,6 @@
         [returnArray addObject:img];
     }
 
-
     return returnArray;
 }
 
@@ -86,7 +85,6 @@
     
     NSString *imagePath = [self writeImageToDocuments:imageData withImageName:item.item_id];
     item.item_url = imagePath;
-    
     NSLog(@"item.item_url:%@",item.item_url);
 }
 -(NSString*)getDoucmentPath

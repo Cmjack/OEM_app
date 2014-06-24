@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EditPhotosViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource {
+class EditPhotosViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,EditImageViewDelegate,PhotosCollectionViewCellDelegate,UIActionSheetDelegate,ChoosePhotoViewControllerDelegate{
 
     init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -19,9 +19,14 @@ class EditPhotosViewController: UIViewController,UICollectionViewDelegate,UIColl
     var collectionViewLayout : CHTCollectionViewWaterfallLayout!
     
     var items : NSArray! = []
-    
+    var edit : EditImageView!
+    var rect : CGRect!
+    var deleteIndexPath : NSIndexPath!
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"添加",style : .Plain, target:self, action: "clickAddButton")
+        self.title = section.album_name
+       
         collectionViewLayout = CHTCollectionViewWaterfallLayout()
         collectionViewLayout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10)
         collectionViewLayout.minimumColumnSpacing = 12
@@ -34,9 +39,6 @@ class EditPhotosViewController: UIViewController,UICollectionViewDelegate,UIColl
         collectionView.registerClass(PhotosCollectionViewCell.self, forCellWithReuseIdentifier:"Cell")
 
         self.view.addSubview(collectionView)
-        // Do any additional setup after loading the view.
-//        let fruits : AnyObject[] = Photos.loadAlbum()
-//        class func animateWithDuration(duration: NSTimeInterval, animations: (() -> Void)!, completion: ((Bool) -> Void)!) // delay = 0.0, options = 0
         
         items = section.items.allObjects
     }
@@ -61,40 +63,103 @@ class EditPhotosViewController: UIViewController,UICollectionViewDelegate,UIColl
     
      func collectionView(collectionView: UICollectionView?, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell? {
         let cell = collectionView?.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as PhotosCollectionViewCell
-        
-        var item : Item! = items[indexPath.row] as Item
-        cell.photoImageView.image = UIImage(contentsOfFile:item.item_url)
+        cell.photoImageView.image = UIImage(contentsOfFile:(items[indexPath.item] as Item).item_url)
+        cell.photoImageView.frame = cell.bounds
+        cell.delegate = self
         // Configure the cell
         return cell
     }
     
     func collectionView(collectionView:UICollectionView?,layout collectionViewLayout:UICollectionViewLayout,sizeForItemAtIndexPath indexPath:NSIndexPath) -> CGSize{
-    
-        var item : Item! = items[indexPath.row] as Item
-
-        var image = UIImage(contentsOfFile:item.item_url)
+        var image = UIImage(contentsOfFile:(items[indexPath.item] as Item).item_url)
         var size = image.size
         return (CGSizeMake(144, 144 * size.height/size.width))
-
-        
-        
-//        if size.width/size.height>144/192
-//        {
-//            println(CGSizeMake(144, 144 * size.height/size.width))
-//            
-//            return (CGSizeMake(144, 144 * size.height/size.width))
-//
-//            
-//        }else
-//        {
-////            return CGSizeMake(144, size.width/144*size.height)
-//
-//        }
-//        
-//        return CGSizeMake(144, 192)
+    }
     
+    func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!){
+        var cell  = collectionView.cellForItemAtIndexPath(indexPath) as PhotosCollectionViewCell!
+        
+        var image = UIImage(contentsOfFile:(items[indexPath.item] as Item).item_url)
+        rect = self.view.convertRect(cell.frame,fromView:self.collectionView)
+        edit = EditImageView(frame:rect)
+        edit.delegate = self
+        edit.items = items
+        edit.selectIdx = indexPath.row
+        edit.initSubviews()
+        self.view.addSubview(edit)
+        
+        UIView.animateWithDuration(0.25, animations:{
+            
+            self.navigationController.navigationBarHidden = true
+
+            self.edit.frame = self.view.bounds
+            
+            },completion:{ mBool in
+                self.edit.collectionView.hidden = false
+                self.edit.imageView.hidden = true
+                
+            })
+        
+        
     }
 
+    func EditImageViewSuccess()
+    {
+        UIView.animateWithDuration(0.25, animations:{
+            
+            self.navigationController.navigationBarHidden = false
+            
+            self.edit.alpha = 0
+            
+            },completion:{ mBool in
+             
+             self.edit.removeFromSuperview()
+             self.edit = nil
+                
+            })
+    }
+    
+    func PhotosCollectionViewLongPressCell(cell:UICollectionViewCell)
+    {
+        
+        deleteIndexPath = collectionView.indexPathForCell(cell)
+        var sheet  =  UIActionSheet()
+        sheet.delegate = self
+        sheet.addButtonWithTitle("删除")
+        sheet.addButtonWithTitle("取消")
+        sheet.cancelButtonIndex = 1
+        sheet.destructiveButtonIndex = 0
+        sheet.showInView(self.view)
+        
+    }
+    
+    func actionSheet(actionSheet: UIActionSheet!, clickedButtonAtIndex buttonIndex: Int)
+    {
+        if buttonIndex == 0
+        {
+            section.removeItemsObject(items[deleteIndexPath.item] as Item)
+            items = section.items.allObjects
+            self.collectionView.deleteItemsAtIndexPaths([deleteIndexPath])
+        }
+        
+    }
+    
+    func clickAddButton(){
+        
+        var photosChoose = ChoosePhotoViewController(nibName:nil ,bundle:nil)
+        photosChoose.delegate = self;
+        photosChoose.section = section
+        self.navigationController.pushViewController(photosChoose, animated:true)
+
+    
+    }
+    
+    func ChoosePhotoViewControllerCreateSectionSuccess()
+    {
+        items = section.items.allObjects
+        self.collectionView.reloadData()
+    }
+    
     /*
     // #pragma mark - Navigation
 

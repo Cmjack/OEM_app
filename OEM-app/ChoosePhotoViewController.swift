@@ -45,8 +45,11 @@ class ChoosePhotoViewController: UIViewController,UICollectionViewDelegate,UICol
             self.assets = sites as ALAsset[]
             self.collectionView.reloadData()
         }
-        
-        section = Section_Create.sectionInManagedObjectContext(moc)
+        if user != nil
+        {
+            section = Section_Create.sectionInManagedObjectContext(moc)
+
+        }
 
     }
     func initSubViews(){
@@ -62,7 +65,6 @@ class ChoosePhotoViewController: UIViewController,UICollectionViewDelegate,UICol
         collectionView.dataSource = self
         collectionView.backgroundColor = UIColor.whiteColor()
         collectionView.registerClass(PhotosCollectionViewCell.self, forCellWithReuseIdentifier:"Cell")
-        
         self.view.addSubview(collectionView)
 
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"保存",style : .Plain, target:self, action: "clickDoneButton")
@@ -75,14 +77,22 @@ class ChoosePhotoViewController: UIViewController,UICollectionViewDelegate,UICol
     }
     func clickDoneButton(){
         
-//        println(selectAssets)
-        self.alertView = UIAlertView()
-        self.alertView.delegate = self
-        self.alertView.message = "主人赐个名字吧"
-        self.alertView.addButtonWithTitle("取消")
-        self.alertView.addButtonWithTitle("确定")
-        self.alertView.alertViewStyle = .PlainTextInput
-        self.alertView.show()
+        if user != nil
+        {
+            self.alertView = UIAlertView()
+            self.alertView.delegate = self
+            self.alertView.message = "主人赐个名字吧"
+            self.alertView.addButtonWithTitle("取消")
+            self.alertView.addButtonWithTitle("确定")
+            self.alertView.alertViewStyle = .PlainTextInput
+            self.alertView.show()
+
+        }else
+        {
+            createItems()
+            self.navigationController.popViewControllerAnimated(true)
+            self.delegate?.ChoosePhotoViewControllerCreateSectionSuccess()
+        }
         
     }
     
@@ -146,6 +156,8 @@ class ChoosePhotoViewController: UIViewController,UICollectionViewDelegate,UICol
         
            section.album_name = textField.text
            self.createItems()
+            user.addSectionsObject(section)
+
            self.navigationController.popViewControllerAnimated(true)
            self.delegate?.ChoosePhotoViewControllerCreateSectionSuccess()
            
@@ -172,7 +184,6 @@ class ChoosePhotoViewController: UIViewController,UICollectionViewDelegate,UICol
             section.addItemsObject(item)
             Photos().saveImageToDocmentWithItem(item, withAsset : image as UIImage)
         }
-        user.addSectionsObject(section)
         
     }
     

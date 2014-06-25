@@ -12,7 +12,7 @@ protocol EditImageViewDelegate : NSObjectProtocol {
     func EditImageViewSuccess()
 }
 
-class EditImageView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource{
+class EditImageView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource,FiterViewDelegate{
 
     var imageView : UIImageView!
     var cancelBtn : UIButton!
@@ -30,11 +30,10 @@ class EditImageView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource
     }
     
     func initSubviews(){
-        var item : Item! = items[selectIdx] as Item
         imageView = UIImageView(frame : self.bounds)
         imageView.contentMode = .ScaleAspectFit
         imageView.autoresizingMask = .FlexibleWidth | .FlexibleWidth;
-        imageView.image = UIImage(contentsOfFile:item.item_url)
+        imageView.image = UIImage(contentsOfFile:(items[selectIdx] as Item).item_url)
         self.addSubview(imageView)
         
         collectionViewLayout = UICollectionViewFlowLayout()
@@ -63,8 +62,9 @@ class EditImageView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource
         cancelBtn.alpha = 0
         self.addSubview(cancelBtn)
         
-        fiterView = FiterView(frame:CGRect(x:0,y:0,width:320,height:30))
+        fiterView = FiterView(frame:CGRect(x:0,y:0,width:320,height:62))
         fiterView.alpha = 0
+        fiterView.delegate = self
         fiterView.initSubviews()
         self.addSubview(fiterView)
     }
@@ -81,8 +81,7 @@ class EditImageView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource
     
     func collectionView(collectionView: UICollectionView?, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell? {
         let cell = collectionView?.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as PhotosCollectionViewCell
-        var item : Item! = items[indexPath.row] as Item
-        cell.photoImageView.image = UIImage(contentsOfFile:item.item_url)
+        cell.photoImageView.image = UIImage(contentsOfFile:(items[indexPath.row] as Item).item_url)
         // Configure the cell
         return cell
     }
@@ -94,7 +93,7 @@ class EditImageView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource
         collectionViewLayout.itemSize = self.bounds.size
         var indexPath =  NSIndexPath(forItem : selectIdx ,inSection : 0) as NSIndexPath!
         collectionView.scrollToItemAtIndexPath(indexPath,atScrollPosition:.Left, animated:false)
-        fiterView.frame = CGRect(x:0,y:self.bounds.size.height - 76,width:self.bounds.size.width,height:30)
+        fiterView.frame = CGRect(x:0,y:self.bounds.size.height - 76,width:self.bounds.size.width,height:62)
         
     }
     
@@ -110,8 +109,7 @@ class EditImageView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource
         }else{
             
             showfiterView()
-            var item : Item! = items[indexPath.row] as Item
-           fiterView.setCurrentImage(UIImage(contentsOfFile:item.item_url))
+//           fiterView.setCurrentImage(UIImage(contentsOfFile:(items[indexPath.row] as Item).item_url))
 
         }
         
@@ -147,7 +145,14 @@ class EditImageView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource
             })
 
     }
-    
+    func fiterViewViewChooseFiter(index : NSInteger!)
+    {
+        var cell = collectionView.visibleCells()[0] as PhotosCollectionViewCell
+        var indexPath = collectionView.indexPathsForVisibleItems()[0] as NSIndexPath
+        
+        cell.photoImageView.image = Fiterimage.imageWithImage(UIImage(contentsOfFile:(items[indexPath.row] as Item).item_url),index:index)
+
+    }
     /*
     // Only override drawRect: if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.

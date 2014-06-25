@@ -8,11 +8,16 @@
 
 import UIKit
 
-class MainTableViewCell: UITableViewCell {
+protocol MainTableViewCellDelegate : NSObjectProtocol {
+    
+    func MainTableViewCellTextFieldEndEdit(cell: UITableViewCell!,text :NSString!)
+}
+class MainTableViewCell: UITableViewCell ,UITextFieldDelegate{
 
+     var delegate       : MainTableViewCellDelegate!
      var photoImageView : UIImageView!
      var maskImageView  : UIImageView!
-     var titleLabel     : UILabel!
+     var titleLabel     : UITextField!
      var deLabel        : UILabel!
     
     init(style: UITableViewCellStyle, reuseIdentifier: String) {
@@ -38,12 +43,14 @@ class MainTableViewCell: UITableViewCell {
         maskImageView.image = UIImage(named:"folderFrame")
         self.addSubview(maskImageView)
         
-        titleLabel = UILabel(frame:CGRect(x:99,y:9,width:247,height:21))
+        titleLabel = UITextField(frame:CGRect(x:99,y:9,width:247,height:21))
         titleLabel.font = UIFont.systemFontOfSize(17)
         titleLabel.text = "我的相册"
+        titleLabel.delegate = self
         self.addSubview(titleLabel)
         
         deLabel = UILabel(frame:CGRect(x:99,y:38,width:247,height:21))
+        
         deLabel.font = UIFont.systemFontOfSize(15)
         deLabel.text = "共5张"
 
@@ -51,6 +58,10 @@ class MainTableViewCell: UITableViewCell {
     
     }
 
+    func textFieldDidEndEditing(textField: UITextField!)
+    {
+        self.delegate?.MainTableViewCellTextFieldEndEdit(self,text : textField.text)
+    }
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

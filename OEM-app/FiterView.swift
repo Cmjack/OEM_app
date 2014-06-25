@@ -7,16 +7,21 @@
 //
 
 import UIKit
-
+protocol FiterViewDelegate : NSObjectProtocol {
+    
+    func fiterViewViewChooseFiter(index : NSInteger!)
+}
 class FiterView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource{
 
     var collectionView : UICollectionView!
     var collectionViewLayout : UICollectionViewFlowLayout!
     var items : NSArray!
-    var selectIdx : NSInteger!
+    var selectIdx : NSIndexPath!
     var currentImage: UIImage!
-    
+    var exampleImage: UIImage!
+    var delegate : FiterViewDelegate!
     init(frame: CGRect) {
+        
         super.init(frame: frame)
         // Initialization code
     }
@@ -36,11 +41,12 @@ class FiterView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource{
         collectionView.clipsToBounds = false
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.registerClass(PhotosCollectionViewCell.self, forCellWithReuseIdentifier:"Cell")
+        collectionView.registerClass(FiterCollectionViewCell.self, forCellWithReuseIdentifier:"Cell")
         self.addSubview(collectionView)
         items = ["原图","LOMO","黑白","复古","哥特","锐色","淡雅","酒红","青柠","浪漫","光晕","蓝调","梦幻","夜色"]
         
-        
+        exampleImage = UIImage(named:"example")
+        selectIdx = NSIndexPath(forItem : 0 ,inSection : 0) as NSIndexPath!
     }
     func numberOfSectionsInCollectionView(collectionView: UICollectionView?) -> Int {
         //#warning Incomplete method implementation -- Return the number of sections
@@ -53,27 +59,50 @@ class FiterView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource{
     }
     
     func collectionView(collectionView: UICollectionView?, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell? {
-        let cell = collectionView?.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as PhotosCollectionViewCell
-        cell.backgroundColor = UIColor.redColor()
-       
-        cell.photoImageView.image = ImageUtil.changeImage(indexPath.item,imageView:currentImage)
+        let cell = collectionView?.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as FiterCollectionViewCell
+        cell.photoImageView.image = Fiterimage.imageWithImage(exampleImage,index:indexPath.item)
+        
+        if selectIdx == indexPath
+        {
+            cell.backgroundColor = UIColor.yellowColor()
 
+        }else
+        {
+            cell.backgroundColor = UIColor.clearColor()
+
+        }
+        
         // Configure the cell
         return cell
     }
     
     
     func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!){
-        var cell  = collectionView.cellForItemAtIndexPath(indexPath) as PhotosCollectionViewCell!
+        
+        var cell  = collectionView.cellForItemAtIndexPath(indexPath) as FiterCollectionViewCell!
+        
+        if selectIdx
+        {
+            var oldCell  = collectionView.cellForItemAtIndexPath(selectIdx) as FiterCollectionViewCell!
+            if oldCell{
+             oldCell.backgroundColor = UIColor.clearColor()
+            }
+        }
+        
+        cell.backgroundColor = UIColor.yellowColor()
+        selectIdx = indexPath
+        
+        self.delegate.fiterViewViewChooseFiter(selectIdx.item)
+
         
     }
     
-    func setCurrentImage(image: UIImage!)
-    {
-        currentImage = image
-        
-        collectionView.reloadData()
-    }
+//    func setCurrentImage(image: UIImage!)
+//    {
+////        currentImage = image
+//        
+//        collectionView.reloadData()
+//    }
     /*
     // Only override drawRect: if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.

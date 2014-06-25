@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController : UIViewController, UITableViewDelegate, UITableViewDataSource,ChoosePhotoViewControllerDelegate
+class MainViewController : UIViewController, UITableViewDelegate, UITableViewDataSource,ChoosePhotoViewControllerDelegate,MainTableViewCellDelegate
 {
 
 
@@ -22,6 +22,8 @@ class MainViewController : UIViewController, UITableViewDelegate, UITableViewDat
 
         // Do any additional setup after loading the view.
         self.title = "集匠"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"分享",style : .Plain, target:self, action: "clickShareBtn")
+
         self.tableView = UITableView(frame:self.view.frame, style:UITableViewStyle.Plain)
         self.tableView!.delegate = self
         self.tableView!.dataSource = self
@@ -40,7 +42,6 @@ class MainViewController : UIViewController, UITableViewDelegate, UITableViewDat
         var users   =   ManageCoreData.instance().fetchData() as NSArray!
         if users.count == 0
         {
-            println(0)
             user = User_Create.userInManagedObjectContext(moc)
         
         }else{
@@ -55,7 +56,15 @@ class MainViewController : UIViewController, UITableViewDelegate, UITableViewDat
         // Dispose of any resources that can be recreated.
     }
     
-
+    override func viewWillAppear(animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        sections = user.sections.allObjects
+        self.tableView.reloadData()
+        
+    }
+    
+    //#pragma mark - UITableViewDataSource
     func numberOfSectionsInTableView(tableView: UITableView!) -> Int
     {
         return 1
@@ -70,6 +79,7 @@ class MainViewController : UIViewController, UITableViewDelegate, UITableViewDat
     {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as MainTableViewCell!
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+        cell.delegate = self
         var section = sections[indexPath.row] as Section
         var items  = section.items.allObjects
         cell.titleLabel.text = section.album_name as String
@@ -93,6 +103,14 @@ class MainViewController : UIViewController, UITableViewDelegate, UITableViewDat
         self.navigationController.pushViewController(detailViewController, animated:true)
     }
     
+    func tableView(tableView: UITableView!, viewForFooterInSection section: Int) -> UIView!
+    {
+        return UIView()
+    }
+    
+    // #pragma mark - clickBtn
+    
+    
     func clickAddButton()
     {
         var photosChoose = ChoosePhotoViewController(nibName:nil ,bundle:nil)
@@ -102,12 +120,29 @@ class MainViewController : UIViewController, UITableViewDelegate, UITableViewDat
 
     }
     
+    func clickShareBtn(){
+    
+    
+    }
+    
+    // #pragma mark - ChoosePhotoViewControllerDelegate
     func ChoosePhotoViewControllerCreateSectionSuccess()
     {
-        sections = user.sections.allObjects
-        self.tableView.reloadData()
+//        sections = user.sections.allObjects
+//        self.tableView.reloadData()
 
     }
+    
+    // #pragma mark - MainTableViewCellDelegate
+
+    func MainTableViewCellTextFieldEndEdit(cell: UITableViewCell!,text :NSString!)
+    {
+        var indexPath = tableView.indexPathForCell(cell)
+        var section = sections[indexPath.row] as Section
+        section.album_name = text
+        
+    }
+
     
     /*
     // #pragma mark - Navigation

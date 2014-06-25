@@ -38,8 +38,6 @@ class ChoosePhotoViewController: UIViewController,UICollectionViewDelegate,UICol
         super.viewDidLoad()
         self.title = "相册"
                 // Do any additional setup after loading the view.
-        self.initSubViews()
-        
         Photos.loadAlbum{ sites in
             
             self.assets = sites as ALAsset[]
@@ -50,7 +48,8 @@ class ChoosePhotoViewController: UIViewController,UICollectionViewDelegate,UICol
             section = Section_Create.sectionInManagedObjectContext(moc)
 
         }
-
+        
+        self.initSubViews()
     }
     func initSubViews(){
     
@@ -68,6 +67,7 @@ class ChoosePhotoViewController: UIViewController,UICollectionViewDelegate,UICol
         self.view.addSubview(collectionView)
 
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title:"保存",style : .Plain, target:self, action: "clickDoneButton")
+        self.navigationItem.rightBarButtonItem.enabled = false
 
     }
     
@@ -135,6 +135,7 @@ class ChoosePhotoViewController: UIViewController,UICollectionViewDelegate,UICol
 
         
         if chooseIndexPaths.containsObject(indexPath){
+            
             chooseIndexPaths.removeObject(indexPath)
             selectAssets.removeObject(asset)
             cell.chooseImageView.hidden = true
@@ -145,7 +146,15 @@ class ChoosePhotoViewController: UIViewController,UICollectionViewDelegate,UICol
             selectAssets.addObject(asset)
             cell.chooseImageView.hidden = false
         }
+        if selectAssets.count > 0
+        {
+            self.navigationItem.rightBarButtonItem.enabled = true
 
+        }else
+        {
+            self.navigationItem.rightBarButtonItem.enabled = false
+
+        }
     }
     
     func alertView(alertView: UIAlertView!, clickedButtonAtIndex buttonIndex: Int)

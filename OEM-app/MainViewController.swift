@@ -14,7 +14,7 @@ class MainViewController : UIViewController, UITableViewDelegate, UITableViewDat
 
     var tableView   : UITableView! = nil
     let moc = ManageCoreData.instance().managedObjectContext()
-    var user : User! = nil
+    var user : User?
     var sections : NSArray! = []
 
     override func viewDidLoad() {
@@ -47,7 +47,7 @@ class MainViewController : UIViewController, UITableViewDelegate, UITableViewDat
         }else{
             user = users[0] as User!
         }
-        sections = user.sections.allObjects
+        sections = user!.sections.allObjects
         
     }
     
@@ -59,7 +59,7 @@ class MainViewController : UIViewController, UITableViewDelegate, UITableViewDat
     override func viewWillAppear(animated: Bool)
     {
         super.viewWillAppear(animated)
-        sections = user.sections.allObjects
+        sections = user!.sections.allObjects
         self.tableView.reloadData()
         
     }
@@ -108,6 +108,36 @@ class MainViewController : UIViewController, UITableViewDelegate, UITableViewDat
         return UIView()
     }
     
+    func tableView(tableView: UITableView!, canEditRowAtIndexPath indexPath: NSIndexPath!) -> Bool
+    {
+        return true
+    }
+    func tableView(tableView: UITableView!, editingStyleForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCellEditingStyle
+    {
+        return (.Delete)
+    }
+    
+    func tableView(tableView: UITableView!, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath!)
+    {
+        
+        
+        
+        if editingStyle == .Delete
+        {
+            user!.removeSectionsObject(sections[indexPath.row] as Section)
+            sections = user!.sections.allObjects
+            self.tableView?.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
+
+
+        }
+//        self.items?.removeObjectAtIndex(indexPath.row)
+//        
+//        if (self.items!.count == 0)
+//        {
+//            self.leftBtn!.userInteractionEnabled = false
+//        }
+        
+    }
     // #pragma mark - clickBtn
     
     

@@ -37,7 +37,6 @@ class FiterView: UIView ,UICollectionViewDelegate,UICollectionViewDataSource{
         collectionView = UICollectionView(frame: self.bounds, collectionViewLayout:collectionViewLayout)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.pagingEnabled = true
         collectionView.clipsToBounds = false
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.showsHorizontalScrollIndicator = false

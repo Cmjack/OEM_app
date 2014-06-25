@@ -4,7 +4,7 @@ OEM_app
 
 view controllers group
 
-    MainViewController 主要显示所有相册目录。 
+    MainViewController 主要显示所有相册目录,滑动删除等。 
     EditPhotosViewController 主要是编辑相册，longpress item 可进行删除操作  点击进入 预览和 修改界面。
     ChoosePhotoViewController 主要是读取用户手机，让用户选择相片制作相册。
 

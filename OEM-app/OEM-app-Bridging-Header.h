@@ -11,5 +11,4 @@
 #import "Section+Create.h"
 #import "Item.h"
 #import "Item+Create.h"
-#import "ManagerCoreDataObject.h"
 #import "Fiterimage.h"

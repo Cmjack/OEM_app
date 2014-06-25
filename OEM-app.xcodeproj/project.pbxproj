@@ -27,7 +27,6 @@
 		3FCD395D195409A600937158 /* Section.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCD395C195409A600937158 /* Section.m */; };
 		3FCD3960195409A600937158 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCD395F195409A600937158 /* Item.m */; };
 		3FCD396619540A3600937158 /* Section+Create.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCD396519540A3600937158 /* Section+Create.m */; };
-		3FCD396C195414FA00937158 /* ManagerCoreDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCD396B195414FA00937158 /* ManagerCoreDataObject.m */; };
 		3FD176541957D0530062A2E0 /* EditImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD176531957D0530062A2E0 /* EditImageView.swift */; };
 		3FD176581957DCB90062A2E0 /* btn_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FD176571957DCB90062A2E0 /* btn_back@2x.png */; };
 		3FD1765A1957DCC30062A2E0 /* camera_btn_ok@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FD176591957DCC30062A2E0 /* camera_btn_ok@2x.png */; };
@@ -98,8 +97,6 @@
 		3FCD395F195409A600937158 /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
 		3FCD396419540A3600937158 /* Section+Create.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Section+Create.h"; sourceTree = "<group>"; };
 		3FCD396519540A3600937158 /* Section+Create.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Section+Create.m"; sourceTree = "<group>"; };
-		3FCD396A195414FA00937158 /* ManagerCoreDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagerCoreDataObject.h; sourceTree = "<group>"; };
-		3FCD396B195414FA00937158 /* ManagerCoreDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagerCoreDataObject.m; sourceTree = "<group>"; };
 		3FD176531957D0530062A2E0 /* EditImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditImageView.swift; sourceTree = "<group>"; };
 		3FD176571957DCB90062A2E0 /* btn_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_back@2x.png"; sourceTree = "<group>"; };
 		3FD176591957DCC30062A2E0 /* camera_btn_ok@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera_btn_ok@2x.png"; sourceTree = "<group>"; };
@@ -244,8 +241,6 @@
 				3FCD39471953EA8800937158 /* Item+Create.m */,
 				3FEA382219527F3B00A9F39E /* Photos.h */,
 				3FEA382319527F3B00A9F39E /* Photos.m */,
-				3FCD396A195414FA00937158 /* ManagerCoreDataObject.h */,
-				3FCD396B195414FA00937158 /* ManagerCoreDataObject.m */,
 				3FCD393A1953E7F200937158 /* ManageCoreData.h */,
 				3FCD393B1953E7F200937158 /* ManageCoreData.m */,
 				3F9EE00119516ED4000E9965 /* CHTCollectionViewWaterfallLayout.h */,
@@ -387,7 +382,6 @@
 				3F623022194FEDD600D7AB86 /* OEM_app.xcdatamodeld in Sources */,
 				3F4C0F611952CBEE0003B85D /* ChoosePhotoViewController.swift in Sources */,
 				3F81B4731950331E00E74647 /* PhotosCollectionViewCell.swift in Sources */,
-				3FCD396C195414FA00937158 /* ManagerCoreDataObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
